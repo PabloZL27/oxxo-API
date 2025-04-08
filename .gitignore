@@ -22,6 +22,21 @@ packages/
 obj/
 bin/
 
+# Archivos de cache y build temporales
+*.cache
+*.dgsp
+*.dgpspec.json
+*.csproj.nuget.g.*
+
+# Archivos específicos que están apareciendo
+project.assets.json
+project.nuget.cache
+ApiReto.assets.cache
+
+# Archivos de build generados por Visual Studio/SDK
+*.vs/
+.vscode/
+
 
 # User-specific files
 *.rsuser
