@@ -1,0 +1,6 @@
+@ApiReto_HostAddress = http://localhost:5237
+
+GET {{ApiReto_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
