@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\ApiReto\\ApiReto.csproj": {}
+    "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\oxxo-API\\ApiReto\\ApiReto.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\ApiReto\\ApiReto.csproj": {
+    "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\oxxo-API\\ApiReto\\ApiReto.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\ApiReto\\ApiReto.csproj",
+        "projectUniqueName": "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\oxxo-API\\ApiReto\\ApiReto.csproj",
         "projectName": "ApiReto",
-        "projectPath": "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\ApiReto\\ApiReto.csproj",
+        "projectPath": "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\oxxo-API\\ApiReto\\ApiReto.csproj",
         "packagesPath": "C:\\Users\\tamto\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\ApiReto\\obj\\",
+        "outputPath": "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\oxxo-API\\ApiReto\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\tamto\\AppData\\Roaming\\NuGet\\NuGet.Config"
