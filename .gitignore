@@ -3,6 +3,26 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Archivos y carpetas de NuGet
+*.nupkg
+*.nuspec
+*.cache
+*.dll
+*.exe
+*.pdb
+*.props
+*.targets
+project.assets.json
+project.nuget.cache
+*.csproj.nuget.*
+
+# Carpeta de paquetes y dependencias
+packages/
+.vscode/
+obj/
+bin/
+
+
 # User-specific files
 *.rsuser
 *.suo
