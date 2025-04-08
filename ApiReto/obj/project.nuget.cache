@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "M0t+nlZPHx4=",
+  "dgSpecHash": "xPDZxoHYffs=",
   "success": true,
-  "projectFilePath": "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\ApiReto\\ApiReto.csproj",
+  "projectFilePath": "C:\\Users\\tamto\\Construccion de Software\\GithubReto\\oxxo-API\\ApiReto\\ApiReto.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tamto\\.nuget\\packages\\bouncycastle.cryptography\\2.3.1\\bouncycastle.cryptography.2.3.1.nupkg.sha512",
     "C:\\Users\\tamto\\.nuget\\packages\\google.protobuf\\3.26.1\\google.protobuf.3.26.1.nupkg.sha512",
