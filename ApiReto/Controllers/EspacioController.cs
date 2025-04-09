@@ -8,12 +8,13 @@ namespace ApiReto.Controllers;
 [Route("[controller]")]
 public class EspacioController : ControllerBase
 {
-    string connectionString = "...";
+    string connectionString = "Server=mysql-93cf659-tamtok2-09a8.b.aivencloud.com;Port=23481;Database=BDOxxo;Uid=avnadmin;Password=AVNS_-9SXvTjsy8x6dg2kaJR";
 
-    [HttpGet("PreguntaEspacio")]
-    public List<PreguntaDTO> GetPreguntas([FromQuery] int juegoId = 1)
+    // GET: /videojuego?juegoId=2
+    [HttpGet("Espacio_Pregunta")]
+    public List<object> GetPreguntas([FromQuery] int juegoId = 1)
     {
-        var preguntas = new List<PreguntaDTO>();
+        var preguntas = new List<object>();
 
         using var conexion = new MySqlConnection(connectionString);
         conexion.Open();
@@ -25,7 +26,7 @@ public class EspacioController : ControllerBase
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            preguntas.Add(new PreguntaDTO
+            preguntas.Add(new
             {
                 id_pregunta = reader.GetInt32("id_pregunta"),
                 texto = reader["texto"].ToString(),
@@ -37,10 +38,11 @@ public class EspacioController : ControllerBase
         return preguntas;
     }
 
+    // GET: /videojuego/respuestas/3
     [HttpGet("respuestas/{idPregunta}")]
-    public List<RespuestaDTO> GetRespuestas(int idPregunta)
+    public List<object> GetRespuestas(int idPregunta)
     {
-        var respuestas = new List<RespuestaDTO>();
+        var respuestas = new List<object>();
 
         using var conexion = new MySqlConnection(connectionString);
         conexion.Open();
@@ -52,7 +54,7 @@ public class EspacioController : ControllerBase
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            respuestas.Add(new RespuestaDTO
+            respuestas.Add(new
             {
                 id_respuesta = reader.GetInt32("id_respuesta"),
                 texto = reader["texto"].ToString(),
