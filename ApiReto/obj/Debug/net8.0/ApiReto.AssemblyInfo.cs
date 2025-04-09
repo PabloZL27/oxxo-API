@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ApiReto")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8c099d7a3a5e6bd59419d7bf1b3b5ca7f73e75dd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fbddd1b549c8eff531a3643357f15bb65c7d3703")]
 [assembly: System.Reflection.AssemblyProductAttribute("ApiReto")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ApiReto")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
