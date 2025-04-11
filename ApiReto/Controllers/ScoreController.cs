@@ -13,8 +13,6 @@ namespace ApiReto.Controllers
         [HttpPost("SaveGameResult")] // Ruta: POST /Score/SaveGameResult
         public IActionResult SaveGameResult([FromBody] SaveScoreRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
 
             string query = @"
                 INSERT INTO instanciajuego (id_usuario, id_juego, puntuacion, fecha)
