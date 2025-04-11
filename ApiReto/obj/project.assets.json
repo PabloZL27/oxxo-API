@@ -2593,19 +2593,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/emiliopuga/.nuget/packages/": {}
+    "C:\\Users\\Jordy\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/emiliopuga/Documents/GitHub/oxxo-API/ApiReto/ApiReto.csproj",
+      "projectUniqueName": "C:\\Users\\Jordy\\OneDrive\\ITC\\7. Cuarto semestre\\Construccion de Software\\Reto\\APIReto\\oxxo-API\\ApiReto\\ApiReto.csproj",
       "projectName": "ApiReto",
-      "projectPath": "/Users/emiliopuga/Documents/GitHub/oxxo-API/ApiReto/ApiReto.csproj",
-      "packagesPath": "/Users/emiliopuga/.nuget/packages/",
-      "outputPath": "/Users/emiliopuga/Documents/GitHub/oxxo-API/ApiReto/obj/",
+      "projectPath": "C:\\Users\\Jordy\\OneDrive\\ITC\\7. Cuarto semestre\\Construccion de Software\\Reto\\APIReto\\oxxo-API\\ApiReto\\ApiReto.csproj",
+      "packagesPath": "C:\\Users\\Jordy\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Jordy\\OneDrive\\ITC\\7. Cuarto semestre\\Construccion de Software\\Reto\\APIReto\\oxxo-API\\ApiReto\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/emiliopuga/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Jordy\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -2666,7 +2666,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.406/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
