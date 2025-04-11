@@ -197,7 +197,115 @@ public class VideojuegoController : ControllerBase
         return Ok(indicadores);
     }
 
+   [HttpPost("inicializar_valores/{idInstancia}")]
+    public IActionResult InicializarValoresTemporales(int idInstancia)
+    {
+        using (MySqlConnection conexion = new MySqlConnection(connectionString))
+        {
+            conexion.Open();
+            MySqlCommand cmd = new MySqlCommand("InicializarValoresTemporales", conexion);
+            cmd.CommandType = CommandType.StoredProcedure;
 
+            // CORRECTO: Este debe coincidir con el nombre del parámetro en tu SP
+            cmd.Parameters.AddWithValue("@instancia_id", idInstancia);
 
+            try
+            {
+                cmd.ExecuteNonQuery();
+                return Ok("Valores temporales inicializados");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = "Error al inicializar valores: " + ex.Message });
+            }
+        }
+    }
+
+    [HttpGet("valores_actuales/{idInstancia}")]
+    public IActionResult GetValoresActuales(int idInstancia)
+    {
+        List<object> valores = new List<object>();
+
+        using (MySqlConnection conexion = new MySqlConnection(connectionString))
+        {
+            conexion.Open();
+
+            MySqlCommand cmd = new MySqlCommand(@"
+                SELECT i.id_indicador, i.nombre, v.valor_actual
+                FROM valores_temporales_indicadores v
+                JOIN indicadores i ON v.id_indicador = i.id_indicador
+                WHERE v.id_instancia = @idInstancia
+            ", conexion);
+
+            cmd.Parameters.AddWithValue("@idInstancia", idInstancia);
+            cmd.Prepare();
+
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    valores.Add(new
+                    {
+                        id_indicador = reader.GetInt32("id_indicador"),
+                        nombre = reader["nombre"].ToString(),
+                        valor_actual = reader.GetInt32("valor_actual")
+                    });
+                }
+            }
+
+            conexion.Close();
+        }
+
+        return Ok(valores);
+    }
+
+        [HttpPost("aplicar_impacto")]
+public IActionResult AplicarImpacto([FromBody] AplicarImpactoRequest request)
+{
+    // --- Validación Opcional (pero recomendada) ---
+    if (request.id_instancia <= 0 || request.id_opcion <= 0)
+    {
+        return BadRequest(new { error = "ID de instancia y/o ID de opción inválido(s)." });
+    }
+
+    try
+    {
+        using (var conexion = new MySqlConnection(connectionString))
+        {
+            conexion.Open();
+
+            // --- Configurar el comando para llamar al Stored Procedure ---
+            var cmd = new MySqlCommand("aplicar_impactos_a_temporales", conexion); // Nombre del SP
+            cmd.CommandType = CommandType.StoredProcedure; // Indicar que es un SP
+
+            // --- Añadir los parámetros requeridos por el SP ---
+            // Asegúrate que los nombres (@p_id_instancia, @p_id_opcion) coincidan con los del SP
+            // AddWithValue a menudo funciona, pero especificar el tipo es más seguro:
+            cmd.Parameters.Add("@p_id_instancia", MySqlDbType.Int32).Value = request.id_instancia;
+            cmd.Parameters.Add("@p_id_opcion", MySqlDbType.Int32).Value = request.id_opcion;
+
+            // --- Ejecutar el Stored Procedure ---
+            // ExecuteNonQuery se usa porque el SP no devuelve un conjunto de resultados (solo hace UPDATEs)
+            cmd.ExecuteNonQuery();
+
+            // --- Ya no necesitas el bucle foreach ---
+
+        } // La conexión se cierra automáticamente por el using
+
+        return Ok("Impactos aplicados correctamente mediante SP."); // Mensaje de éxito
+    }
+    catch (MySqlException mysqlEx) // Captura errores específicos de MySQL si quieres
+    {
+        // Loggear el error completo para diagnóstico
+        Console.WriteLine($"MySQL Error executing SP aplicar_impactos_a_temporales: {mysqlEx.ToString()}");
+        return StatusCode(500, new { error = "Error en la base de datos al aplicar impactos.", details = mysqlEx.Message });
+    }
+    catch (Exception ex) // Captura cualquier otro error
+    {
+        // Loggear el error completo para diagnóstico
+        Console.WriteLine($"General Error executing SP aplicar_impactos_a_temporales: {ex.ToString()}");
+        return StatusCode(500, new { error = "Error interno del servidor al aplicar impactos.", details = ex.Message }); // 500 Internal Server Error es más apropiado aquí
+    }
+}
 
 }
