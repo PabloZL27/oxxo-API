@@ -1,0 +1,16 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "ApiReto/ApiReto.csproj",
+        "use": "@vercel/dotnet",
+        "config": { "Project": "ApiReto/ApiReto.csproj" }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/ApiReto/ApiReto.csproj"
+      }
+    ]
+  }
