@@ -43,5 +43,47 @@ namespace ApiReto.Controllers
                 connection?.Close();
             }
         }
+
+        [HttpGet("MaximoPuntaje/{idUsuario}/{idJuego}")]
+        public IActionResult ObtenerMaximoPuntaje(int idUsuario, int idJuego)
+        {
+            string query = @"
+                SELECT MAX(puntuacion) AS puntuacionMaxima
+                FROM instanciajuego
+                WHERE id_usuario = @IdUsuario AND id_juego = @IdJuego;";
+
+            MySqlConnection connection = null;
+            try
+            {
+                connection = new MySqlConnection(_connectionString);
+                connection.Open();
+                using var command = new MySqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                command.Parameters.AddWithValue("@IdJuego", idJuego);
+
+                var result = command.ExecuteScalar();
+
+                if (result != DBNull.Value && result != null)
+                {
+                    int puntuacionMaxima = Convert.ToInt32(result);
+                    return Ok(new { idUsuario = idUsuario, idJuego = idJuego, puntuacionMaxima = puntuacionMaxima });
+                }
+                else
+                {
+                    return Ok(new { idUsuario = idUsuario, idJuego = idJuego, puntuacionMaxima = 0 });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en ObtenerMaximoPuntaje: {ex.Message}");
+                return StatusCode(500, new { message = "Error interno del servidor.", details = ex.Message });
+            }
+            finally
+            {
+                connection?.Close();
+            }
+        }
+
     }
 }

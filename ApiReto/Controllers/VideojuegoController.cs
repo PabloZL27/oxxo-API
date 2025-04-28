@@ -260,52 +260,90 @@ public class VideojuegoController : ControllerBase
     }
 
         [HttpPost("aplicar_impacto")]
-public IActionResult AplicarImpacto([FromBody] AplicarImpactoRequest request)
-{
-    // --- Validación Opcional (pero recomendada) ---
-    if (request.id_instancia <= 0 || request.id_opcion <= 0)
+    public IActionResult AplicarImpacto([FromBody] AplicarImpactoRequest request)
     {
-        return BadRequest(new { error = "ID de instancia y/o ID de opción inválido(s)." });
-    }
-
-    try
-    {
-        using (var conexion = new MySqlConnection(connectionString))
+        // --- Validación Opcional (pero recomendada) ---
+        if (request.id_instancia <= 0 || request.id_opcion <= 0)
         {
-            conexion.Open();
+            return BadRequest(new { error = "ID de instancia y/o ID de opción inválido(s)." });
+        }
 
-            // --- Configurar el comando para llamar al Stored Procedure ---
-            var cmd = new MySqlCommand("aplicar_impactos_a_temporales", conexion); // Nombre del SP
-            cmd.CommandType = CommandType.StoredProcedure; // Indicar que es un SP
+        try
+        {
+            using (var conexion = new MySqlConnection(connectionString))
+            {
+                conexion.Open();
 
-            // --- Añadir los parámetros requeridos por el SP ---
-            // Asegúrate que los nombres (@p_id_instancia, @p_id_opcion) coincidan con los del SP
-            // AddWithValue a menudo funciona, pero especificar el tipo es más seguro:
-            cmd.Parameters.Add("@p_id_instancia", MySqlDbType.Int32).Value = request.id_instancia;
-            cmd.Parameters.Add("@p_id_opcion", MySqlDbType.Int32).Value = request.id_opcion;
+                // --- Configurar el comando para llamar al Stored Procedure ---
+                var cmd = new MySqlCommand("aplicar_impactos_a_temporales", conexion); // Nombre del SP
+                cmd.CommandType = CommandType.StoredProcedure; // Indicar que es un SP
 
-            // --- Ejecutar el Stored Procedure ---
-            // ExecuteNonQuery se usa porque el SP no devuelve un conjunto de resultados (solo hace UPDATEs)
-            cmd.ExecuteNonQuery();
+                // --- Añadir los parámetros requeridos por el SP ---
+                // Asegúrate que los nombres (@p_id_instancia, @p_id_opcion) coincidan con los del SP
+                // AddWithValue a menudo funciona, pero especificar el tipo es más seguro:
+                cmd.Parameters.Add("@p_id_instancia", MySqlDbType.Int32).Value = request.id_instancia;
+                cmd.Parameters.Add("@p_id_opcion", MySqlDbType.Int32).Value = request.id_opcion;
 
-            // --- Ya no necesitas el bucle foreach ---
+                // --- Ejecutar el Stored Procedure ---
+                // ExecuteNonQuery se usa porque el SP no devuelve un conjunto de resultados (solo hace UPDATEs)
+                cmd.ExecuteNonQuery();
 
-        } // La conexión se cierra automáticamente por el using
+                // --- Ya no necesitas el bucle foreach ---
 
-        return Ok("Impactos aplicados correctamente mediante SP."); // Mensaje de éxito
+            } // La conexión se cierra automáticamente por el using
+
+            return Ok("Impactos aplicados correctamente mediante SP."); // Mensaje de éxito
+        }
+        catch (MySqlException mysqlEx) // Captura errores específicos de MySQL si quieres
+        {
+            // Loggear el error completo para diagnóstico
+            Console.WriteLine($"MySQL Error executing SP aplicar_impactos_a_temporales: {mysqlEx.ToString()}");
+            return StatusCode(500, new { error = "Error en la base de datos al aplicar impactos.", details = mysqlEx.Message });
+        }
+        catch (Exception ex) // Captura cualquier otro error
+        {
+            // Loggear el error completo para diagnóstico
+            Console.WriteLine($"General Error executing SP aplicar_impactos_a_temporales: {ex.ToString()}");
+            return StatusCode(500, new { error = "Error interno del servidor al aplicar impactos.", details = ex.Message }); // 500 Internal Server Error es más apropiado aquí
+        }
     }
-    catch (MySqlException mysqlEx) // Captura errores específicos de MySQL si quieres
+
+
+    [HttpPost("UpdateGameResult")] // Ruta: POST /Score/UpdateGameResult
+    public IActionResult UpdateGameResult([FromBody] UpdateScoreRequest request)
     {
-        // Loggear el error completo para diagnóstico
-        Console.WriteLine($"MySQL Error executing SP aplicar_impactos_a_temporales: {mysqlEx.ToString()}");
-        return StatusCode(500, new { error = "Error en la base de datos al aplicar impactos.", details = mysqlEx.Message });
+        string query = @"
+            UPDATE instanciajuego
+            SET puntuacion = @Puntuacion
+            WHERE id_instancia = @IdInstancia;";
+
+        MySqlConnection connection = null;
+        try
+        {
+            connection = new MySqlConnection(connectionString);
+            connection.Open();
+            using var command = new MySqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@Puntuacion", request.Puntuacion.Value);
+            command.Parameters.AddWithValue("@IdInstancia", request.IdInstancia.Value);
+
+            int rowsAffected = command.ExecuteNonQuery();
+
+            if (rowsAffected > 0)
+                return Ok(new { message = "Puntaje actualizado correctamente." });
+            else
+                return BadRequest(new { message = "No se encontró la instancia o no se actualizó nada." });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error en UpdateGameResult: {ex.Message}");
+            return StatusCode(500, new { message = "Error interno del servidor.", details = ex.Message });
+        }
+        finally
+        {
+            connection?.Close();
+        }
     }
-    catch (Exception ex) // Captura cualquier otro error
-    {
-        // Loggear el error completo para diagnóstico
-        Console.WriteLine($"General Error executing SP aplicar_impactos_a_temporales: {ex.ToString()}");
-        return StatusCode(500, new { error = "Error interno del servidor al aplicar impactos.", details = ex.Message }); // 500 Internal Server Error es más apropiado aquí
-    }
-}
+
 
 }
