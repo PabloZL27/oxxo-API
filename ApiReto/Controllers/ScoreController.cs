@@ -48,9 +48,9 @@ namespace ApiReto.Controllers
         public IActionResult ObtenerMaximoPuntaje(int idUsuario, int idJuego)
         {
             string query = @"
-                SELECT MAX(puntuacion) AS puntuacionMaxima
-                FROM instanciajuego
-                WHERE id_usuario = @IdUsuario AND id_juego = @IdJuego;";
+               SELECT MAX(puntuacion) 
+                FROM instanciajuego 
+                WHERE id_usuario = @idUsuario AND id_juego = 2;";
 
             MySqlConnection connection = null;
             try
