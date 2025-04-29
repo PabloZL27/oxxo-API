@@ -309,41 +309,44 @@ public class VideojuegoController : ControllerBase
     }
 
 
-    [HttpPost("UpdateGameResult")] // Ruta: POST /Score/UpdateGameResult
-    public IActionResult UpdateGameResult([FromBody] UpdateScoreRequest request)
+    [HttpPost("UpdateGameResult")]
+public IActionResult UpdateGameResult([FromBody] UpdateScoreRequest request)
+{
+    string query = @"
+        UPDATE instanciajuego
+        SET puntuacion = @Puntuacion,
+            id_usuario = @IdUsuario
+        WHERE id_instancia = @IdInstancia;";
+
+    MySqlConnection connection = null;
+    try
     {
-        string query = @"
-            UPDATE instanciajuego
-            SET puntuacion = @Puntuacion
-            WHERE id_instancia = @IdInstancia;";
+        connection = new MySqlConnection(connectionString);
+        connection.Open();
+        using var command = new MySqlCommand(query, connection);
 
-        MySqlConnection connection = null;
-        try
-        {
-            connection = new MySqlConnection(connectionString);
-            connection.Open();
-            using var command = new MySqlCommand(query, connection);
+        command.Parameters.AddWithValue("@Puntuacion", request.Puntuacion);
+        command.Parameters.AddWithValue("@IdUsuario", request.IdUsuario);
+        command.Parameters.AddWithValue("@IdInstancia", request.IdInstancia);
 
-            command.Parameters.AddWithValue("@Puntuacion", request.Puntuacion.Value);
-            command.Parameters.AddWithValue("@IdInstancia", request.IdInstancia.Value);
+        int rowsAffected = command.ExecuteNonQuery();
 
-            int rowsAffected = command.ExecuteNonQuery();
-
-            if (rowsAffected > 0)
-                return Ok(new { message = "Puntaje actualizado correctamente." });
-            else
-                return BadRequest(new { message = "No se encontró la instancia o no se actualizó nada." });
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error en UpdateGameResult: {ex.Message}");
-            return StatusCode(500, new { message = "Error interno del servidor.", details = ex.Message });
-        }
-        finally
-        {
-            connection?.Close();
-        }
+        if (rowsAffected > 0)
+            return Ok(new { message = "Puntaje actualizado correctamente." });
+        else
+            return BadRequest(new { message = "No se encontró la instancia o no se actualizó nada." });
     }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error en UpdateGameResult: {ex.Message}");
+        return StatusCode(500, new { message = "Error interno del servidor.", details = ex.Message });
+    }
+    finally
+    {
+        connection?.Close();
+    }
+}
+
 
 
 }
