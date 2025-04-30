@@ -99,5 +99,50 @@ namespace ApiReto.Controllers
                 return StatusCode(500, new { mensaje = "Error en el servidor", detalle = ex.Message });
             }
         }
+        [HttpGet("leaderboard")]
+        public async Task<IActionResult> ObtenerLeaderboard()
+        {
+            var resultados = new List<LeaderboardUsuarioDTO>();
+
+            try
+            {
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    var cmd = new MySqlCommand(@"
+                        SELECT u.id_usuario, u.nombre, COUNT(lu.id_logro) AS logros_obtenidos, 
+                            (SELECT COUNT(*) FROM logros) AS total_logros
+                        FROM usuarios u
+                        LEFT JOIN logros_usuario lu ON u.id_usuario = lu.id_usuario
+                        GROUP BY u.id_usuario, u.nombre
+                        ORDER BY logros_obtenidos DESC;
+                    ", connection);
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            resultados.Add(new LeaderboardUsuarioDTO
+                            {
+                                idUsuario = Convert.ToInt32(reader["id_usuario"]),
+                                nombre = reader["nombre"].ToString(),
+                                logros = Convert.ToInt32(reader["logros_obtenidos"]),
+                                totalLogros = Convert.ToInt32(reader["total_logros"])
+                            });
+                        }
+                    }
+                }
+
+                return Ok(resultados);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error en el servidor", detalle = ex.Message });
+            }
+        }
+
     }
+
+    
 }
